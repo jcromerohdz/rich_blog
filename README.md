@@ -82,7 +82,7 @@ class Article < ApplicationRecord
 	has_rich_text :content
 end
 ```
-After tha we need to put the control of the action text in the erb file as follows:
+1.1 After tha we need to put the control of the action text in the erb file as follows:
 ```erb
 #app/views/articles/new.html.erb
 <%= form_with(model: @article, local: true) do |form| %>
@@ -101,7 +101,7 @@ After tha we need to put the control of the action text in the erb file as follo
 	</div>
 <% end %>
 ```
-It's time to save the articles into Article so for that we need to tell the action to the controller as follows:
+1.2 It's time to save the articles into Article so for that we need to tell the action to the controller as follows:
 ```ruby
 class ArticlesController < ApplicationController
 	def new
@@ -114,7 +114,7 @@ class ArticlesController < ApplicationController
 	end
 end
 ```
-Les analyse the create method, so we have an instance variable that create the article inside Article, the params are tile and content, in title: we have params[:article][:title] this is provided by the form and also in the content params[:article][:content]. Finally we have the render json: @article this how rails response with a JSON we will see this in the browser if evertythin is ok. And we can see the response when we add new article with a title "Super cool rich text"
+1.3 Let's analyse the create method, so we have an instance variable that create the article inside Article, the params are tile and content, in title: we have params[:article][:title] this is provided by the form and also in the content params[:article][:content]. Finally we have the render json: @article this how rails response with a JSON we will see this in the browser if evertythin is ok. And we can see the response when we add new article with a title "Super cool rich text"
 
 ```json
 id:	2
@@ -123,3 +123,137 @@ status:	null
 created_at:	"2019-11-30T00:22:57.931Z"
 updated_at:	"2019-11-30T00:22:58.054Z"
 ```
+2. Displaying the article in the a web page, to accomplish this task is necesary to write in articles controller the action show as follows:
+```ruby
+Rails.application.routes.draw do
+  get 'home/index'
+  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  get "/welcome", to: "home#index"
+  get "articles/new", to: "articles#new"
+  get "articles/:id", to: "articles#show"
+  post "articles", to: "articles#create"
+end
+```
+```ruby
+class ArticlesController < ApplicationController
+	def show
+		@article = Article.find(:id)
+	end
+  .
+  .
+  .
+```
+2.1 Then we need to create our show.html.erb file inside views/articles and put the following code: 
+```erb
+<h1><%= @article.title %></h1>
+
+<div>
+	<%= @article.content %>
+</div>
+```
+
+2.3 If everythin is OK you will see in your browser the article 2 when you navigate /articles/2. For understanding the article content query I'm gonna use the rails console and apply this query with active record.
+```sh
+$ rails console
+irb(main):001:0> article = Article.find(2)
+   (0.3ms)  SELECT sqlite_version(*)
+  Article Load (0.1ms)  SELECT "articles".* FROM "articles" WHERE "articles"."id" = ? LIMIT ?  [["id", 2], ["LIMIT", 1]]
+=> #<Article id: 2, title: "Super cool rich text", status: nil, created_at: "2019-11-30 00:22:57", updated_at: "2019-11-30 00:22:58">
+irb(main):002:0> article.content
+  ActionText::RichText Load (0.3ms)  SELECT "action_text_rich_texts".* FROM "action_text_rich_texts" WHERE "action_text_rich_texts"."record_id" = ? AND "action_text_rich_texts"."record_type" = ? AND "action_text_rich_texts"."name" = ? LIMIT ?  [["record_id", 2], ["record_type", "Article"], ["name", "content"], ["LIMIT", 1]]
+  Rendered /home/chris/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/actiontext-6.0.1/app/views/action_text/content/_layout.html.erb (Duration: 1.2ms | Allocations: 582)
+=> #<ActionText::RichText id: 1, name: "content", body: #<ActionText::Content "<div class=\"trix-conte...">, record_type: "Article", record_id: 2, created_at: "2019-11-30 00:22:58", updated_at: "2019-11-30 00:22:58">
+irb(main):003:0> 
+```
+2.4 The content is extracted from the table "action_text_rich_texts" as you can see in the article.content SQL query.
+
+3. Edit the article, firts I'm gonna create my route with the action edit and also a patch requeste with the action update this is a rails convention in order to apply this functionallity this code is shown bellow. Then inside of articles_controller create an edit method and the update method as shown bellow. Finally a view is needed so create inside of views/articles/edit.html.erb and add the form for editing the record you want as you can see the code bellow corresponding to this view.
+```ruby
+Rails.application.routes.draw do
+  .
+  .
+  .
+  get "articles/:id", to: "articles#show"
+
+  patch "articles/:id",  to: "articles#update", as: :article
+  .
+  .
+end
+```
+```ruby
+class ArticlesController < ApplicationController
+  .
+  .
+  .
+
+	def edit
+		@article = Article.find(params[:id])
+	end
+
+	def update
+		@article = Article.find(params[:id])
+		@article.update(title: params[:article][:title], content: params[:article][:content])
+		
+		redirect_to @article
+  end
+  .
+  .
+  .
+end
+```
+```erb
+#app/views/articles/edit.html.erb
+<%= form_with(model: @article, local: true) do |form| %>
+	<div>
+		<%= form.label :title %>
+		<%= form.text_field :title %>
+	</div>
+
+	<div>
+		<%= form.label :content %>
+		<%= form.rich_text_area :content %>
+	</div>
+
+	<div>
+		<%= form.submit %>		
+	</div>
+<% end %>
+```
+4. Delete the article, for applying this functionallity first is needed to create a resource with the respective action on routes in other words create a delete resource with action destroy as shown bellow. After the resource is created now inside articles_controller a destroy method is needed for the action ocurs as shown bellow. Finally a link_to is needed in the views/article/show.html.erb for telling the app to delete the corresponding article.
+```ruby
+Rails.application.routes.draw do
+  .
+  .
+  .
+  delete "articles/:id",  to: "articles#destroy"
+end
+```
+```ruby
+#app/controllers/articles_controller.rb
+class ArticlesController < ApplicationController
+  .
+  .
+  .
+def destroy
+		@article = Article.find(params[:id])
+		@article.destroy
+		redirect_to root_path
+	end
+end
+```
+```erb
+#app/views/articles/show.html.erb
+<div>
+	<%= link_to "Delete Article", @article, method: :delete%>
+</div>
+```
+4. Defining a root path, in order this app knows how to redirect to a root path we need to especify this in the routes.rb and define this action as shown bellow:
+```ruby
+Rails.application.routes.draw do
+  .
+  root to: "home/index"
+  .
+  .
+  .
+end
+``` 
