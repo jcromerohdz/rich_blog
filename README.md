@@ -234,7 +234,7 @@ class ArticlesController < ApplicationController
   .
   .
   .
-def destroy
+	def destroy
 		@article = Article.find(params[:id])
 		@article.destroy
 		redirect_to root_path
@@ -251,7 +251,7 @@ end
 ```ruby
 Rails.application.routes.draw do
   .
-  root to: "home/index"
+  root to: "home#index"
   .
   .
   .
