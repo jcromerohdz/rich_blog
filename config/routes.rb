@@ -3,7 +3,8 @@
     root to: "home#index"
     
     get "/welcome", to: "home#index"
-    get "articles/new", to: "articles#new"
+    get "articles", to: "articles#index"
+    get "articles/new", to: "articles#new", as: :new_articles
     get "articles/:id", to: "articles#show"
     get "articles/:id/edit", to: "articles#edit"
 
