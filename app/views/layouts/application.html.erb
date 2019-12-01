@@ -11,6 +11,13 @@
   </head>
 
   <body>
+    <% if notice %>
+      <p class="alert alert-primary"><%= notice %></p>
+    <% end %>
+    <% if alert %>
+      <p class="alert alert-denger"><%= alert %></p>
+    <% end %>
+
     <%= render "partials/nav"%>
     <%= yield %>
   </body>
