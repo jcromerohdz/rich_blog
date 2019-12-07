@@ -419,7 +419,7 @@ You have 1 pending migration:
 $ rails db:migrate
 ```
 # Rails scaffolds and many to many associations
-1. Here I'm going to use rails magic, the scaffolds are fantastic for prototyping, rails make this easy to implemented.
+1. Here I'm going to use rails magic, the scaffolds are fantastic for prototyping, rails make this easy to implemented. After performing the scaffold a migration is needed
 ```sh
 $ rails g scaffold Category title color
 Running via Spring preloader in process 4831
@@ -455,4 +455,11 @@ Running via Spring preloader in process 4831
       create      app/assets/stylesheets/categories.scss
       invoke  scss
       create    app/assets/stylesheets/scaffolds.scss
+$ rails db:migrate
+blog$ rails db:migrate
+== 20191207160237 CreateCategories: migrating =================================
+-- create_table(:categories)
+   -> 0.0014s
+== 20191207160237 CreateCategories: migrated (0.0015s) ========================
+
 ```
