@@ -418,3 +418,41 @@ You have 1 pending migration:
   20191207015227 AddUserIdToArticles
 $ rails db:migrate
 ```
+# Rails scaffolds and many to many associations
+1. Here I'm going to use rails magic, the scaffolds are fantastic for prototyping, rails make this easy to implemented.
+```sh
+$ rails g scaffold Category title color
+Running via Spring preloader in process 4831
+      invoke  active_record
+      create    db/migrate/20191207160237_create_categories.rb
+      create    app/models/category.rb
+      invoke    test_unit
+      create      test/models/category_test.rb
+      create      test/fixtures/categories.yml
+      invoke  resource_route
+       route    resources :categories
+      invoke  scaffold_controller
+      create    app/controllers/categories_controller.rb
+      invoke    erb
+      create      app/views/categories
+      create      app/views/categories/index.html.erb
+      create      app/views/categories/edit.html.erb
+      create      app/views/categories/show.html.erb
+      create      app/views/categories/new.html.erb
+      create      app/views/categories/_form.html.erb
+      invoke    test_unit
+      create      test/controllers/categories_controller_test.rb
+      create      test/system/categories_test.rb
+      invoke    helper
+      create      app/helpers/categories_helper.rb
+      invoke      test_unit
+      invoke    jbuilder
+      create      app/views/categories/index.json.jbuilder
+      create      app/views/categories/show.json.jbuilder
+      create      app/views/categories/_category.json.jbuilder
+      invoke  assets
+      invoke    scss
+      create      app/assets/stylesheets/categories.scss
+      invoke  scss
+      create    app/assets/stylesheets/scaffolds.scss
+```
