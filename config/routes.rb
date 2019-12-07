@@ -2,8 +2,9 @@
   devise_for :users
     get 'home/index'
     root to: "home#index"
-    
+
     get "/welcome", to: "home#index"
+    get "articles/user/:user_id", to: "articles#from_author"
     get "articles", to: "articles#index"
     get "articles/new", to: "articles#new", as: :new_articles
     get "articles/:id", to: "articles#show"
