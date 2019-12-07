@@ -61,7 +61,7 @@ Adding @rails/actiontext to app/javascript/packs/application.js
       append  app/javascript/packs/application.js
 Copied migration 20191130000235_create_active_storage_tables.active_storage.rb from active_storage
 Copied migration 20191130000236_create_action_text_tables.action_text.rb from action_text
-``` 
+```
 ```sh
 $ rails db:migrate
 == 20191130000235 CreateActiveStorageTables: migrating ========================
@@ -143,7 +143,7 @@ class ArticlesController < ApplicationController
   .
   .
 ```
-2.1 Then we need to create our show.html.erb file inside views/articles and put the following code: 
+2.1 Then we need to create our show.html.erb file inside views/articles and put the following code:
 ```erb
 <h1><%= @article.title %></h1>
 
@@ -163,7 +163,7 @@ irb(main):002:0> article.content
   ActionText::RichText Load (0.3ms)  SELECT "action_text_rich_texts".* FROM "action_text_rich_texts" WHERE "action_text_rich_texts"."record_id" = ? AND "action_text_rich_texts"."record_type" = ? AND "action_text_rich_texts"."name" = ? LIMIT ?  [["record_id", 2], ["record_type", "Article"], ["name", "content"], ["LIMIT", 1]]
   Rendered /home/chris/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/actiontext-6.0.1/app/views/action_text/content/_layout.html.erb (Duration: 1.2ms | Allocations: 582)
 => #<ActionText::RichText id: 1, name: "content", body: #<ActionText::Content "<div class=\"trix-conte...">, record_type: "Article", record_id: 2, created_at: "2019-11-30 00:22:58", updated_at: "2019-11-30 00:22:58">
-irb(main):003:0> 
+irb(main):003:0>
 ```
 2.4 The content is extracted from the table "action_text_rich_texts" as you can see in the article.content SQL query.
 
@@ -193,7 +193,7 @@ class ArticlesController < ApplicationController
 	def update
 		@article = Article.find(params[:id])
 		@article.update(title: params[:article][:title], content: params[:article][:content])
-		
+
 		redirect_to @article
   end
   .
@@ -397,4 +397,24 @@ Running via Spring preloader in process 2215
       create    app/views/devise/mailer/password_change.html.erb
       create    app/views/devise/mailer/reset_password_instructions.html.erb
       create    app/views/devise/mailer/unlock_instructions.html.erb
+```
+# One to many associations
+1. for doing this rails use a convention that is to use an id reference of the table you want to associate and I can achieve this generating a migration as shown bellow after executing the migration a migration of the database is needed.
+```sh
+$ rails g migration add_user_id_to_articles user:references
+Running via Spring preloader in process 8192
+      invoke  active_record
+      create    db/migrate/20191207015227_add_user_id_to_articles.rb
+$ rails db:migrate
+```
+if you have records in the database you should reset the database via rails then preform the corresponding migration as shown bellow.
+```sh
+$ rails db:reset
+Dropped database 'db/development.sqlite3'
+Database 'db/test.sqlite3' does not exist
+Created database 'db/development.sqlite3'
+Created database 'db/test.sqlite3'
+You have 1 pending migration:
+  20191207015227 AddUserIdToArticles
+$ rails db:migrate
 ```
