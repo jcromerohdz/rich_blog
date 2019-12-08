@@ -463,3 +463,19 @@ blog$ rails db:migrate
 == 20191207160237 CreateCategories: migrated (0.0015s) ========================
 
 ```
+2. Generate the model for reference the associations between category table and article table, this can be done via rails, after generating this model a migration is need to complete the associations as shown bellow.
+```sh
+$ rails g model HasCategory article:references category:references
+Running via Spring preloader in process 15399
+      invoke  active_record
+      create    db/migrate/20191208160234_create_has_categories.rb
+      create    app/models/has_category.rb
+      invoke    test_unit
+      create      test/models/has_category_test.rb
+      create      test/fixtures/has_categories.yml
+$ rails db:migrate
+== 20191208160234 CreateHasCategories: migrating ==============================
+-- create_table(:has_categories)
+   -> 0.0032s
+== 20191208160234 CreateHasCategories: migrated (0.0033s) =====================
+```
