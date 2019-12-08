@@ -8,9 +8,9 @@ class Article < ApplicationRecord
   def save_categories
 		# category_elemnts 1,2,3
 		# Change the elements to an array
-    categories_array = category_elements.split(",")
+    # categories_array = category_elements.split(",")
 		# Loop the array
-		categories_array.each do |category_id|
+		category_elements.each do |category_id|
 		  # Create HasCategory
 			HasCategory.find_or_create_by(article: self, category_id: category_id)
 		end
