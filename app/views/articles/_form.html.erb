@@ -1,9 +1,14 @@
 <%= form_with(model: @article, local: true) do |form| %>
-	
+
 	<div class="field">
 		<%= form.label :title %> </br>
 		<%= form.text_field :title %>
 	</div>
+
+	<div class="field">
+    <%= form.label :category_elements %>
+    <%= form.text_field :category_elements %>
+  </div>
 
 	<div class="field">
 		<%= form.label :content %>
@@ -11,6 +16,6 @@
 	</div>
 
 	<div>
-		<%= form.submit %>		
+		<%= form.submit %>
 	</div>
 <% end %>
