@@ -18,10 +18,10 @@
 
   <div class="field">
     <%= form.label :color %>
-    <%= form.text_field :color %>
+    <%= form.color_field :color %>
   </div>
 
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit "Save", class: "btn btn-primary" %>
   </div>
 <% end %>
